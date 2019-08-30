@@ -1,8 +1,13 @@
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && apt-get upgrade -y && \
-    apt-get install -y libxtst6 libfontconfig1 libgtk2.0-dev x11-apps
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y libxtst6 libfontconfig1 libgtk2.0-dev x11vnc xvfb
+
+RUN mkdir ~/.vnc
+
+RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 
 WORKDIR /home/
 
@@ -14,9 +19,4 @@ USER myapp
 
 WORKDIR /home/myapp
 RUN chmod a+x /app/SquishCocoInstall
-
-
-
-
-
-
+RUN cd /app/SquishCocoInstall/bin/
